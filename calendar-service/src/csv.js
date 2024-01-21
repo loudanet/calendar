@@ -2,7 +2,7 @@ import { createObjectCsvWriter } from "csv-writer";
 import csv from "csv-parser";
 import fs from "fs";
 
-const fp = "../js-project/data/events.csv";
+const fp = "../calendar-service/data/events.csv";
 
 const w = createObjectCsvWriter({
     path: fp,
