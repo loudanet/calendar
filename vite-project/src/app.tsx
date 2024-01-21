@@ -49,6 +49,24 @@ export function App() {
         setClicked(true);
     }
 
+    function handleEventSubmission(): void {
+        const http = new XMLHttpRequest();
+        const url = `http://localhost:8080/events/${calendarDate.year}/${calendarDate.month}/${calendarDate.day}`;
+        http.open("PUT", url, true);
+        http.onreadystatechange = function() {
+            let r: HTMLElement = document.getElementById("response") as HTMLElement;
+            switch (this.readyState) {
+                case 2:
+                case 3:
+                    r.innerHTML = "<p>Loading...</p>";
+                    break;
+                case 4:
+                    alert(`The readystate is ${this.readyState} and the response is ${this.response} and the status code is ${this.status}`);
+            }
+        }
+        http.send(inputEvent);
+    }
+
     return (
         <div>
             <ErrorBoundary>
@@ -58,7 +76,7 @@ export function App() {
                     <button className="left" onClick={() => { updateInputDate(calendarDate.nextDay().toString()) }}>T+1</button>
                     <input id="inputDate" name="Date" type="text" style={{color: inputDateColour}} value={inputDate} onChange={(e) => { updateInputDate(e.target.value) }}></input>
                     <input id="inputEvent" name="Event" type="text" style={{color: inputEventColour}} value={inputEvent} onClick={handleInputEventClick} onChange={handleEventChange}></input>
-                    <button className="right">Insert</button>
+                    <button className="right" onClick={handleEventSubmission}>Insert</button>
                 </div>
                 <div className="background">
                     <div id="response">

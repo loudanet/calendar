@@ -3,10 +3,15 @@ import express from "express";
 
 let app = express();
 
-app.get("/events/:year/:month/:day", (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5173")
-    res.header("Access-Conrol-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+app.use((req, res, next) => {
+    // CORS management
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Methods", "GET, PUT");
+    res.header("Access-Conrol-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+})
 
+app.get("/events/:year/:month/:day", (req, res, next) => {
     read(req.params.year, req.params.month, req.params.day).
     then((events) => {
         if (events.length == 0) {
@@ -24,7 +29,7 @@ app.get("/events/:year/:month/:day", (req, res, next) => {
     catch((err) => { console.error(err); res.status(500).send(); })
 });
 
-app.put("events/:year/:month/:day", (req, res, next) => {
+app.put("/events/:year/:month/:day", (req, res, next) => {
     if (!req.body) {
         res.status(404).send("Missing event 'name' - please specify");
     }
