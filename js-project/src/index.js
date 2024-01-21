@@ -1,7 +1,10 @@
 import { write, read } from "./csv.js";
 import express from "express";
+import bodyparser from "body-parser";
 
 let app = express();
+
+const plainTextParser = bodyparser.text();
 
 app.use((req, res, next) => {
     // CORS management
@@ -29,9 +32,10 @@ app.get("/events/:year/:month/:day", (req, res, next) => {
     catch((err) => { console.error(err); res.status(500).send(); })
 });
 
-app.put("/events/:year/:month/:day", (req, res, next) => {
+app.put("/events/:year/:month/:day", plainTextParser, (req, res, next) => {
     if (!req.body) {
-        res.status(404).send("Missing event 'name' - please specify");
+        res.status(400).send("Missing event 'name' in client request");
+        return;
     }
 
     const events = [{year: req.params.year, month: req.params.month, day: req.params.day, id: 999, name: req.body}]

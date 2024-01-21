@@ -64,6 +64,7 @@ export function App() {
                     alert(`The readystate is ${this.readyState} and the response is ${this.response} and the status code is ${this.status}`);
             }
         }
+        http.setRequestHeader("Content-Type", "text/plain");
         http.send(inputEvent);
     }
 
