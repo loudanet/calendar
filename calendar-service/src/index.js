@@ -25,7 +25,7 @@ app.get("/events/:year/:month/:day", (req, res, next) => {
         let out;
         for (let i = 0; i < events.length; i++) {
             let event = events[i];
-            out += `<p>There is an event called "${event}"</p>`;
+            out = `<p>There is an event called "${event}"</p>`;
         }
         res.send(out);
     }).
