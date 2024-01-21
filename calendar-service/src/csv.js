@@ -17,12 +17,12 @@ const w = createObjectCsvWriter({
 });
 
 export function write(events) {
-    var statusCode;
-    w.writeRecords(events).
-    catch((err) => { console.error(err); var statusCode = 500; }).
-    then(() => { console.log(`Wrote ${events.length} events`); var statusCode = 201; })
-    return statusCode;
-}
+    return new Promise((resolve, reject) => {
+        w.writeRecords(events).
+        catch((err) => { reject(err) }).
+        then(() => { console.log(`Wrote ${events.length} events`); resolve(); });
+    })
+};
 
 export function read(year, month, day) {
     return new Promise((resolve, reject) => {
@@ -37,5 +37,22 @@ export function read(year, month, day) {
         on("end", () => {
             resolve(events);
         });
-    })
+    });
+};
+
+export function getMaxId() {
+    return new Promise((resolve, reject) => {
+        let maxId = 0;
+        fs.createReadStream(fp).
+        pipe(csv()).
+        on("data", (row) => {
+            const id = Number(row.ID);
+            if (id > maxId) {
+                maxId = id;
+            }
+        }).
+        on("end", () => {
+            resolve(maxId);
+        });
+    });
 }

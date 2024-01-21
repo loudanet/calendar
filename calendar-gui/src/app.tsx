@@ -4,6 +4,7 @@ import ErrorBoundary from "./error-boundary";
 import "./styles.css"
 
 export function App() {
+    // TODO: Use fewer variables (less error-prone and easier to follow)
     let [calendarDate, setCalendarDate] = useState(new CalendarDate());
     let [inputDate, setInputDate] = useState(calendarDate.toString());
     let [inputDateColour, setInputDateColour] = useState("black");
