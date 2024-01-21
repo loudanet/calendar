@@ -49,7 +49,8 @@ app.put("/events/:year/:month/:day", plainTextParser, (req, res, next) => {
         res.status(201).send();
     }).
     catch((err) => {
-        console.error(err); res.status(500).send();
+        console.error(err);
+        res.status(500).send();
     })
 })
 
