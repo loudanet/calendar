@@ -7,20 +7,34 @@ const fp = "../calendar-service/data/events.csv";
 const w = createObjectCsvWriter({
     path: fp,
     header: [
-        {id: "year", name: "YEAR"},
-        {id: "month", name: "MONTH"},
-        {id: "day", name: "DAY"},
-        {id: "id", name: "ID"},
-        {id: "name", name: "NAME"}
+        {id: "YEAR", name: "YEAR"},
+        {id: "MONTH", name: "MONTH"},
+        {id: "DAY", name: "DAY"},
+        {id: "ID", name: "ID"},
+        {id: "NAME", name: "NAME"}
     ],
     append: true
 });
 
 export function write(events) {
+    if (!fs.existsSync(fp)) {
+        fs.writeFileSync(fp, "YEAR,MONTH,DAY,ID,NAME\n")
+    }
+
     return new Promise((resolve, reject) => {
-        w.writeRecords(events).
+        let newEvents = [];
+        for (let i = 0; i < events.length; i++) {
+            newEvents.push({
+                YEAR: events[i].YEAR,
+                MONTH: events[i].MONTH,
+                DAY: events[i].DAY,
+                ID: events[i].ID,
+                NAME: events[i].NAME,
+            })
+        }
+        w.writeRecords(newEvents).
         catch((err) => { reject(err) }).
-        then(() => { console.log(`Wrote ${events.length} events`); resolve(); });
+        then(() => { resolve(); });
     })
 };
 
@@ -30,9 +44,16 @@ export function read(year, month, day) {
         fs.createReadStream(fp).
         pipe(csv()).
         on("data", (row) => {
-            if (row.YEAR == year && row.MONTH == month && row.DAY == day) {
-                events.push(row.NAME);
+            if (row.YEAR != year) {
+                return;
             }
+            if (row.MONTH != month) {
+                return;
+            }
+            if (row.DAY != day) {
+                return;
+            }
+            events.push(row);
         }).
         on("end", () => {
             resolve(events);
@@ -53,6 +74,33 @@ export function getMaxId() {
         }).
         on("end", () => {
             resolve(maxId);
+        });
+    });
+}
+
+export function remove(id) {
+    return new Promise((resolve, reject) => {
+        read("2024", "Jan", "28").
+        then((events) => {
+            let newEvents = [];
+            let found = false;
+            for (let i = 0; i < events.length; i++) {
+                let ev = events[i];
+                if (ev.ID == id) {
+                    found = true;
+                    continue;
+                }
+                newEvents.push(ev);
+            }
+            if (!found) {
+                throw(`Event with ID ${id} not found`);
+            }
+            return newEvents;
+        }).then((events) => {
+            fs.unlinkSync(fp);
+            write(events);
+        }).catch((err) => {
+            console.error(err);
         });
     });
 }

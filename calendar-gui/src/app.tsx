@@ -1,7 +1,10 @@
 import { useState } from "react";
 import CalendarDate, { CalendarDateFromString } from "./date";
+import { refresh } from "./table";
 import ErrorBoundary from "./error-boundary";
 import "./styles.css"
+
+const calendarUrl: string = "http://localhost:8080/events";
 
 export function App() {
     // TODO: Use fewer variables (less error-prone and easier to follow)
@@ -18,21 +21,7 @@ export function App() {
         if (ok) {
             setInputDateColour("black");
             setCalendarDate(date);
-            const http = new XMLHttpRequest();
-            const url = `http://localhost:8080/events/${date.year}/${date.month}/${date.day}`;
-            http.open("GET", url, true);
-            http.onreadystatechange = function() {
-                let r: HTMLElement = document.getElementById("response") as HTMLElement;
-                switch (this.readyState) {
-                    case 2:
-                    case 3:
-                        r.innerHTML = "<p>Loading...</p>";
-                        break;
-                    case 4:
-                        setTimeout(() => { r.innerHTML = this.response }, 500);
-                }
-            }
-            http.send();
+            refresh(date);
         } else {
             setInputDateColour("red");
         }
@@ -52,7 +41,7 @@ export function App() {
 
     function handleEventSubmission(): void {
         const http = new XMLHttpRequest();
-        const url = `http://localhost:8080/events/${calendarDate.year}/${calendarDate.month}/${calendarDate.day}`;
+        const url = calendarUrl + `/${calendarDate.year}/${calendarDate.month}/${calendarDate.day}`;
         http.open("PUT", url, true);
         http.onreadystatechange = function() {
             let r: HTMLElement = document.getElementById("response") as HTMLElement;
@@ -62,7 +51,8 @@ export function App() {
                     r.innerHTML = "<p>Loading...</p>";
                     break;
                 case 4:
-                    alert(`The readystate is ${this.readyState} and the response is ${this.response} and the status code is ${this.status}`);
+                    setInputEvent("");
+                    refresh(calendarDate);
             }
         }
         http.setRequestHeader("Content-Type", "text/plain");
@@ -79,6 +69,7 @@ export function App() {
                     <input id="inputDate" name="Date" type="text" style={{color: inputDateColour}} value={inputDate} onChange={(e) => { updateInputDate(e.target.value) }}></input>
                     <input id="inputEvent" name="Event" type="text" style={{color: inputEventColour}} value={inputEvent} onClick={handleInputEventClick} onChange={handleEventChange}></input>
                     <button className="right" onClick={handleEventSubmission}>Insert</button>
+                    <button className="right" onClick={() => {refresh(calendarDate)}}>Refresh</button>
                 </div>
                 <div className="background">
                     <div id="response">
