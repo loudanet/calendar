@@ -54,7 +54,7 @@ function getHtmlTable(events: TableRow[], date: CalendarDate): HTMLTableElement 
 
 function removeEvent(id: number, d: CalendarDate): void {
     const http = new XMLHttpRequest();
-    const url: string = calendarUrl + `/${id}`;
+    const url: string = calendarUrl + `/${d.year}/${d.month}/${d.day}/${id}`;
     http.open("DELETE", url, true);
     http.send();
     // TODO: Refresh for date d

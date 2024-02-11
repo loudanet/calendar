@@ -56,6 +56,10 @@ button {
 button:hover {
   border: 2px dotted orange;
 }
+button.active {
+  transform: rotate(360deg);
+  transition-duration: 1s;
+}
 
 #inputDate {
   display: inline-block;

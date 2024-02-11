@@ -78,9 +78,9 @@ export function getMaxId() {
     });
 }
 
-export function remove(id) {
+export function remove(year, month, day, id) {
     return new Promise((resolve, reject) => {
-        read("2024", "Jan", "28").
+        read(year, month, day).
         then((events) => {
             let newEvents = [];
             let found = false;

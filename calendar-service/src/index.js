@@ -44,8 +44,8 @@ app.put("/events/:year/:month/:day", plainTextParser, (req, res, next) => {
     })
 });
 
-app.delete("/events/:id", (req, res, next) => {
-    remove(req.params.id).
+app.delete("/events/:year/:month/:day/:id", (req, res, next) => {
+    remove(req.params.year, req.params.month, req.params.day, req.params.id).
     then(() => {
         res.status(201).send();
     }).
