@@ -85,3 +85,20 @@ td:hover {
   background-color: white;
   color: black;
 }
+
+.axis-line {
+  position: absolute;
+  background-color: skyblue;
+  z-index: 9999;
+  pointer-events: none;
+}
+#x-axis-line {
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+#y-axis-line {
+  top: 0;
+  width: 2px;
+  height: 100%;
+}

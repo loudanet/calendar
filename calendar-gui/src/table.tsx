@@ -1,4 +1,6 @@
 import CalendarDate from "./date";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type TableRow = {
     YEAR: string;
@@ -9,6 +11,12 @@ type TableRow = {
 };
 
 const calendarUrl: string = "http://localhost:8080/events";
+
+library.add(faTrash);
+const iconHTML = icon({
+    prefix: "fas", // The prefix for solid icons
+    iconName: "trash" // The name of the icon
+  }).html[0];
 
 function getHtmlTable(events: TableRow[], date: CalendarDate): HTMLTableElement {
     let t: HTMLTableElement = document.createElement("table");
@@ -43,7 +51,7 @@ function getHtmlTable(events: TableRow[], date: CalendarDate): HTMLTableElement 
         m.innerText = ev.MONTH;
         d.innerText = ev.DAY;
         e.innerText = ev.NAME;
-        del.innerHTML = `<button>X</button>`;
+        del.innerHTML = `<button>${iconHTML}</button>`;
         del.addEventListener("click", () => {
             removeEvent(ev.ID, date);
         });

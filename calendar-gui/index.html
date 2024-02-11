@@ -8,16 +8,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      $(() => {
-        $("button").on("click", (event) => {
-          $(event.target).addClass("active");
-          setTimeout(() => {
-            $(event.target).removeClass("active");
-          }, 1100);
-        });
-      });
-    </script>
+    <script type="module" src="/src/jquery.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
