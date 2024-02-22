@@ -5,6 +5,11 @@
   color: darkblue;
 }
 
+html {
+  max-height: 1200px;
+  overflow: hidden;
+}
+
 .left {
   float:left;
 }
