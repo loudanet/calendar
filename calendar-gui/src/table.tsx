@@ -14,8 +14,8 @@ const calendarUrl: string = "http://localhost:8080/events";
 
 library.add(faTrash);
 const iconHTML = icon({
-    prefix: "fas", // The prefix for solid icons
-    iconName: "trash" // The name of the icon
+    prefix: "fas",
+    iconName: "trash"
   }).html[0];
 
 function getHtmlTable(events: TableRow[], date: CalendarDate): HTMLTableElement {
